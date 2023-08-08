@@ -19,7 +19,7 @@ COPY target/OneHealth_Video-2.3.4.jar app.jar
  
 
 # Expose the port your Spring Boot application is running on (change the port accordingly)
-EXPOSE 8081
+EXPOSE 8080
 
  
 
