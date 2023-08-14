@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
+
 
 @RestController
 @CrossOrigin("*")
@@ -88,6 +90,34 @@ public class MainController
         simpMessagingTemplate.convertAndSendToUser(jsonObject.getString("callTo"),"/topic/call",jsonObject.get("callFrom"));
     }
     
+    
+    
+    
+    @MessageMapping("/call-request")
+    public void Call_Request(String call){
+        JSONObject jsonObject = new JSONObject(call);
+        System.out.println("Calling to: "+jsonObject.get("callTo")+" Call from "+jsonObject.get("callFrom"));
+        System.out.println("Calling to class: "+jsonObject.get("callTo").getClass()+" Call from class "+jsonObject.get("callFrom").getClass());
+        simpMessagingTemplate.convertAndSendToUser(jsonObject.getString("callTo"),"/topic/call-request",jsonObject.get("callFrom"));
+    }
+    
+    
+    @MessageMapping("/call-accept")
+    public void callAccept(String callAccept) {
+        JSONObject jsonObject = new JSONObject(callAccept);
+        String caller = jsonObject.getString("caller");
+        String callee = jsonObject.getString("callee");
+
+        // Create a room or session for the call
+        // You can use a library like WebRTC adapter or Jitsi for handling rooms
+
+        // Notify the caller and callee about the call acceptance
+        simpMessagingTemplate.convertAndSendToUser(caller, "/topic/call-accepted", callee);
+        simpMessagingTemplate.convertAndSendToUser(callee, "/topic/call-accepted", caller);
+    }
+
+
+    
 //    @MessageMapping("/call")
 //    public void Call(String call) {
 //        JSONObject jsonObject = new JSONObject(call);
@@ -155,6 +185,7 @@ public class MainController
         JSONObject jsonObject = new JSONObject(candidate);
         System.out.println(jsonObject.get("toUser"));
         System.out.println(jsonObject.get("fromUser"));
+        System.out.println("Candidate Received..........");
         System.out.println(jsonObject.get("candidate"));
         simpMessagingTemplate.convertAndSendToUser(jsonObject.getString("toUser"),"/topic/candidate",candidate);
         System.out.println("Candidate Sent");
