@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.oneHealth.Video.DTO.ChatMessage;
 
 import ch.qos.logback.core.net.SyslogOutputStream;
 
@@ -117,23 +118,8 @@ public class MainController
     }
 
 
+  
     
-//    @MessageMapping("/call")
-//    public void Call(String call) {
-//        JSONObject jsonObject = new JSONObject(call);
-//        String callTo = jsonObject.getString("callTo");
-//        String callFrom = jsonObject.getString("callFrom");
-//
-//        System.out.println("Calling to: " + callTo + " Call from " + callFrom);
-//
-//        // Notify the callee (2nd person) about the call request
-//        simpMessagingTemplate.convertAndSendToUser(callTo, "/topic/call", callFrom);
-//    }
-    
-    
-    
-    
-
     @MessageMapping("/offer")
     public void Offer(String offer){
 
@@ -162,23 +148,8 @@ public class MainController
         System.out.println("Answer Sent");
     }
     
-//    @MessageMapping("/answer")
-//    public void Answer(String answer) {
-//        JSONObject jsonObject = new JSONObject(answer);
-//        String toUser = jsonObject.getString("toUser");
-//        String fromUser = jsonObject.getString("fromUser");
-//        String answerText = jsonObject.getString("answer");
-//
-//        System.out.println("Answer came from: " + fromUser + " to: " + toUser);
-//
-//        // Notify the caller (1st person) about the call acceptance
-//        //simpMessagingTemplate.convertAndSendToUser(toUser, "/topic/answer", answer);
-//        
-//    }
-    
-    
-    
-    
+
+        
     @MessageMapping("/candidate")
     public void Candidate(String candidate){
         System.out.println("Candidate came");
@@ -191,5 +162,14 @@ public class MainController
         System.out.println("Candidate Sent");
 
 
+    }
+    
+    
+    @MessageMapping("/sendMessage")
+    public void sendMessage(String message) {
+        // Handle the reminder message here
+        // You can broadcast the message to all connected clients
+    	System.out.println("Remainder Received : "+message);
+        simpMessagingTemplate.convertAndSend("/topic/reminder", message);
     }
 }
