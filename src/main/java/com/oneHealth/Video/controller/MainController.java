@@ -46,11 +46,6 @@ public class MainController
     @MessageMapping("/addUser")
     public void addUser(String payload){
         System.out.println("Adding User");
-//        users.add(user);
-//        for (String u :users) {
-//            System.out.println(u);
-//        }
-//        System.out.println("User Added Successfully")
         JSONObject jsonObject = new JSONObject(payload);
 
         String myId = jsonObject.getString("myId");
