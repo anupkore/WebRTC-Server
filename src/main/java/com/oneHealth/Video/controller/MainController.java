@@ -44,13 +44,34 @@ public class MainController
 
 
     @MessageMapping("/addUser")
-    public void addUser(String user){
+    public void addUser(String payload){
         System.out.println("Adding User");
-        users.add(user);
-        for (String u :users) {
-            System.out.println(u);
+//        users.add(user);
+//        for (String u :users) {
+//            System.out.println(u);
+//        }
+//        System.out.println("User Added Successfully")
+        JSONObject jsonObject = new JSONObject(payload);
+
+        String myId = jsonObject.getString("myId");
+        String remoteId = jsonObject.getString("remoteId");
+        String role = jsonObject.getString("role");
+        users.add(myId);
+        
+        
+        System.out.println("Role is ..."+role);
+        System.out.println(users.contains(remoteId));
+        System.out.println(!(users.contains(remoteId)));
+        
+        
+        if(role.equals("Doctor")&& users.contains(remoteId)) {
+        	simpMessagingTemplate.convertAndSendToUser(myId, "/topic/is-patient-joined", true);
+        }else if(role.equals("Doctor")&& !(users.contains(remoteId))) {
+        	simpMessagingTemplate.convertAndSendToUser(myId, "/topic/is-patient-joined", false);
+        	
+        }else {
+        	simpMessagingTemplate.convertAndSendToUser(remoteId, "/topic/patient-joined", true);
         }
-        System.out.println("User Added Successfully");
     }
     
     
@@ -172,4 +193,8 @@ public class MainController
     	System.out.println("Remainder Received : "+message);
         simpMessagingTemplate.convertAndSend("/topic/reminder", message);
     }
+    
+    
+    
+    
 }
