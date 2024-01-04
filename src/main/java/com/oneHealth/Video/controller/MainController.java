@@ -76,23 +76,16 @@ public class MainController
     
     
     @MessageMapping("/leave")
-    public void leave(String participantId) {
-        System.out.println("Participant with ID: " + participantId + " is leaving the meeting.");
-
-        // Remove the leaving participant from the users list
-        users.remove(participantId);
-
-        // Broadcast the "leave" message to all participants except the sender
-        try {
-            String leaveMessage = objectMapper.writeValueAsString(participantId);
-            for (String user : users) {
-                if (!user.equals(participantId)) {
-                    simpMessagingTemplate.convertAndSendToUser(user, "/topic/leave", leaveMessage);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void leave(String participantIds) {
+        
+    	JSONObject jsonObject = new JSONObject(participantIds);
+    	String myId = jsonObject.getString("myId");
+        String remoteId = jsonObject.getString("remoteId");
+    	
+        System.out.println("Removing User with ID : "+myId);
+        users.removeIf(element -> element.equals(myId));
+        System.out.println("Modified List: " + users);
+        simpMessagingTemplate.convertAndSendToUser(remoteId,"/topic/callEnded",myId);
     }
 
     
