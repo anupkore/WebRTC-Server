@@ -183,6 +183,39 @@ public class MainController
     }
     
     
+    @MessageMapping("/recordRequest")
+    public void getRecordingRequest(String details) {
+    	System.out.println("Recording request came");
+        JSONObject jsonObject = new JSONObject(details);
+        System.out.println(jsonObject.get("toUser"));
+        System.out.println(jsonObject.get("fromUser"));
+        simpMessagingTemplate.convertAndSendToUser(jsonObject.getString("toUser"),"/topic/recordRequest",jsonObject.get("fromUser"));
+        System.out.println("Record request sent");
+    }
+    
+    
+    @MessageMapping("/recordRequestAcceptance")
+    public void patientAcceptedRecordRequest(String acceptance) {
+    	System.out.println("Recording request acceptance came");
+        JSONObject jsonObject = new JSONObject(acceptance);
+        System.out.println(jsonObject.get("toUser"));
+        simpMessagingTemplate.convertAndSendToUser(jsonObject.getString("toUser"),"/topic/recordRequestAcceptance","Accepted");
+        System.out.println("Acceptance Sent");
+    }
+    
+    
+    @MessageMapping("/recordingStopped")
+    public void recordingStoppedNotification(String message) {
+    	System.out.println("Recording stopped message came");
+        JSONObject jsonObject = new JSONObject(message);
+        System.out.println(jsonObject.get("toUser"));
+        simpMessagingTemplate.convertAndSendToUser(jsonObject.getString("toUser"),"/topic/recordingStopped","Stopped");
+        System.out.println("Recording Stopped message Sent");
+    }
+    
+    
+    
+    
     
     
 }
