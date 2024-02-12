@@ -112,6 +112,15 @@ public class MainController
     }
     
     
+    @MessageMapping("/call-rejected")
+    public void Call_Rejected(String rejectionMessage) {
+    	JSONObject jsonObject = new JSONObject(rejectionMessage);
+        System.out.println("Call Rejected By "+jsonObject.get("rejectedBy")+" Message To "+jsonObject.get("messageTo"));
+        System.out.println("Call rejected By class: "+jsonObject.get("rejectedBy").getClass()+" Message To class "+jsonObject.get("messageTo").getClass());
+        simpMessagingTemplate.convertAndSendToUser(jsonObject.getString("messageTo"),"/topic/call-rejected",jsonObject.get("rejectedBy"));
+    }
+    
+    
     @MessageMapping("/call-accept")
     public void callAccept(String callAccept) {
         JSONObject jsonObject = new JSONObject(callAccept);
