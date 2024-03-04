@@ -213,6 +213,16 @@ public class MainController
     }
     
     
+    @MessageMapping("/recordRequestRejection")
+    public void RecordRequestRejection(String rejection) {
+    	System.out.println("Recording request Rejection came");
+        JSONObject jsonObject = new JSONObject(rejection);
+        System.out.println(jsonObject.get("toUser"));
+        simpMessagingTemplate.convertAndSendToUser(jsonObject.getString("toUser"),"/topic/recordRequestRejection","Rejected");
+        System.out.println("Rejection Sent");
+    }
+    
+    
     @MessageMapping("/recordingStopped")
     public void recordingStoppedNotification(String message) {
     	System.out.println("Recording stopped message came");
@@ -220,6 +230,30 @@ public class MainController
         System.out.println(jsonObject.get("toUser"));
         simpMessagingTemplate.convertAndSendToUser(jsonObject.getString("toUser"),"/topic/recordingStopped","Stopped");
         System.out.println("Recording Stopped message Sent");
+    }
+    
+    
+    @MessageMapping("/sendLeaveInitiatedWhileRecordingOn")
+    public void sendLeaveInitiatedWhileRecordingOn(String message) {
+    	System.out.println("sendLeaveInitiatedWhileRecordingOn message came");
+        JSONObject jsonObject = new JSONObject(message);
+        System.out.println(jsonObject.get("remoteId"));
+        System.out.println(jsonObject.get("myId"));
+        System.out.println(jsonObject.get("message"));
+        simpMessagingTemplate.convertAndSendToUser(jsonObject.getString("remoteId"),"/topic/leaveInitiatedWhileRecordingOn",jsonObject.get("message"));
+        System.out.println("sendLeaveInitiatedWhileRecordingOn message Sent");
+    }
+    
+    
+    @MessageMapping("/sendLeaveApprovedAfterRecording")
+    public void sendLeaveApprovedAfterRecording(String message) {
+    	System.out.println("sendLeaveApprovedAfterRecording message came");
+        JSONObject jsonObject = new JSONObject(message);
+        System.out.println(jsonObject.get("remoteId"));
+        System.out.println(jsonObject.get("myId"));
+        System.out.println(jsonObject.get("message"));
+        simpMessagingTemplate.convertAndSendToUser(jsonObject.getString("remoteId"),"/topic/leaveApprovedAfterRecording",jsonObject.get("message"));
+        System.out.println("sendLeaveInitiatedWhileRecordingOn message Sent");
     }
     
     
